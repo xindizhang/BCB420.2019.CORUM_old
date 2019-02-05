@@ -40,21 +40,113 @@ tmp$`subunits(Gene name syn)`[1:5]
 human_data <- tmp[tmp$Organism == 'Human', ]
 human_data$Organism == 'Human'
 nrow(human_data)   # 2916
+sum(is.na(genes)) 
+sum(genes == "") #0
+sum(genes == "N/A") #0
+
+
 # Check outdated data
 myURL <- paste0("https://github.com/hyginn/",
                 "BCB420-2019-resources/blob/master/HGNC.RData?raw=true")
 load(url(myURL)) 
 head(HGNC)
-human_data$`subunits(Gene name)`[1]
-unlist(strsplit(geneNameEg, ";"))
+
+genes <- c()
+for (i in seq_len(nrow(human_data))){
+  geneName <- unlist(strsplit(human_data$`subunits(Gene name)`[i], ";"))
+  genes <- c(geneName, genes)
+}
+sel <- ( ! (genes %in% HGNC$sym)) 
+length(genes[ sel ] )  # 230
+length( unique(genes[ sel ])) # 81
+
+
+# for (i in seq_len(nrow(human_data))){
+#   print(i)
+#   geneName <- strsplit(human_data$`subunits(Gene name)`[i], ";")
+#   print(geneName)
+#   for (j in length(geneName[[1]])){
+#     if ((geneName[[1]][j] == "") & (geneName[[1]][j] == "N/A")){
+#       geneName <- geneName[[1]][-j]
+#     }
+#   }
+#   human_data$`subunits(Gene name)`[i] <- geneName
+# }
+
+
+# Check what genes are outdated
+for (gene in unique(genes[ sel ]) ){
+    iPrev <- grep(gene, HGNC$prev)[1]
+    if (length(iPrev) == 1){
+      print(HGNC$sym[iPrev])
+    }
+}
+
+count <- 0
 for (i in seq_len(nrow(human_data))){
   geneName <- unlist(strsplit(human_data$`subunits(Gene name)`[i], ";"))
   for (gene in geneName){
-    print(gene)
+    # print(gene)
     iPrev <- grep(gene, HGNC$prev)[1]
-    if (length(iPrev) == 1){
-      HGNC$sym[iPrev]
+    if ((gene != "") & (length(iPrev) == 1) & (! is.na(iPrev))) {
+        # print(iPrev)
+        # print(human_data$`subunits(Gene name)`[i])
+        newgene <- gsub(gene, HGNC$sym[iPrev], human_data$`subunits(Gene name)`[i])
+        human_data$`subunits(Gene name)`[i] <- newgene
+        count <- count + 1
+        # print(human_data$`subunits(Gene name)`[i])
+      
     }
   }
 }
-       
+
+finalgenes <- c()
+for (i in seq_len(nrow(human_data))){
+  geneName <- unlist(strsplit(human_data$`subunits(Gene name)`[i], ";"))
+  finalgenes <- c(geneName, finalgenes)
+}
+loc <- which(finalgenes == "")
+finalgenes <- finalgenes[-loc]
+sum(finalgene == "N/A")
+sum(! is.na(finalgene)) * 100 / length(finalgene) 
+sel <- ( ! (finalgenes %in% HGNC$sym))
+length(finalgenes[ sel ] )  # 230
+length( unique(finalgenes[ sel ])) # 81
+
+
+# finalgene <- c()
+# for (i in seq_len(nrow(human_data))){
+#   for (j in length(human_data$`subunits(Gene name)`[i][[1]])){
+#     finalgene <- c(human_data$`subunits(Gene name)`[i][[1]][j], finalgene)
+#   }
+# }
+# length(finalgene)
+# 
+# for (i in seq_len(nrow(unkSym))) {
+#   iPrev <- grep(unkSym$unk[i], HGNC$prev)[1] # take No. 1 if there are several
+#   if (length(iPrev) == 1) {
+#     unkSym$new[i] <- HGNC$sym[iPrev]
+#   } else {
+#     iSynonym <- which(grep(unkSym$unk[i], HGNC$synonym))[1]
+#     if (length(iSynonym) == 1) {
+#       unkSym$new[i] <- HGNC$sym[iSynonym]
+#     }
+#   }
+# }
+# 
+# 
+# 
+# unlist(strsplit(geneNameEg, ";"))
+# for (i in seq_len(nrow(human_data))){
+#   geneName <- unlist(strsplit(human_data$`subunits(Gene name)`[i], ";"))
+#   for (gene in geneName){
+#     print(gene)
+#     iPrev <- grep(gene, HGNC$prev)[1]
+#     if (length(iPrev) == 1){
+#       HGNC$sym[iPrev]
+#     }
+#   }
+# }
+#    
+
+unique(human_data$`Protein complex purification method`)

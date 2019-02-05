@@ -95,7 +95,154 @@ To download the source data from STRING ... :
 &nbsp;
 
 ## 4 Mapping ENSEMBL IDs to HGNC symbols
+CORUM database do have HGNC symbols for genes that encodes for each complex. However, these genes might be outdated, so the following workflow will update the outdated gene symbols in the datasets
+
+&nbsp;
+
+#### Preparations
+
+To begin, we need to load the HGNC reference data:
+
+```R
+myURL <- paste0("https://github.com/hyginn/",
+                "BCB420-2019-resources/blob/master/HGNC.RData?raw=true")
+load(url(myURL))  # loads HGNC data frame
+
+```
+&nbsp;
+
+#### 4.1 Step one: Fiter for human data
+
+&nbsp;
+
+```R
+  # Read data and check the information we have
+  getwd()
+  tmp <- readr::read_delim(file.path("../data", "allComplexes.txt"),
+                           delim = "\t")
+  nrow(tmp) # 4274
+  # check datasets
+  colnames(tmp)
+  # [1] "ComplexID"                          
+  # [2] "ComplexName"                        
+  # [3] "Organism"                           
+  # [4] "Synonyms"                           
+  # [5] "Cell line"                          
+  # [6] "subunits(UniProt IDs)"              
+  # [7] "subunits(Entrez IDs)"               
+  # [8] "Protein complex purification method"
+  # [9] "GO ID"                              
+  # [10] "GO description"                     
+  # [11] "FunCat ID"                          
+  # [12] "FunCat description"                 
+  # [13] "subunits(Gene name)"                
+  # [14] "Subunits comment"                   
+  # [15] "PubMed ID"                          
+  # [16] "Complex comment"                    
+  # [17] "Disease comment"                    
+  # [18] "SWISSPROT organism"                 
+  # [19] "subunits(Gene name syn)"            
+  # [20] "subunits(Protein name)"
+  # filter human data
+  human_data <- tmp[tmp$Organism == 'Human', ]
+  human_data$Organism == 'Human'
+  # Get basic information of the dataset 
+  nrow(human_data)   # 2916
+  # Check for missing variables
+  sum(is.na(genes)) 
+  sum(genes == "")  #0
+  sum(genes == "N/A") #0
+
+```
+
+&nbsp;
+
+#### 4.2  Step two: update the outdated symbols
+
+The gene symbols encodes for one protein complex is quoted in one string and seperated by ; or ;;. To get a more accurate check of the missing data, I obtained a list of genes:
+
+```R
+  genes <- c()
+  for (i in seq_len(nrow(human_data))){
+    geneName <- unlist(strsplit(human_data$`subunits(Gene name)`[i], ";"))
+    genes <- c(geneName, genes)
+  }
+  sel <- ( ! (genes %in% HGNC$sym)) 
+  # we found that there are 81 unique genes that are outdated
+  length(genes[ sel ] )  # 230
+  length( unique(genes[ sel ])) # 81
+  
+  # Check which genes are outdated
+  for (gene in unique(genes[ sel ]) ){
+      iPrev <- grep(gene, HGNC$prev)[1]
+      if (length(iPrev) == 1){
+        print(HGNC$sym[iPrev])
+      }
+  }
+  
+  # Replace the oudated genes with the new version
+  for (i in seq_len(nrow(human_data))){
+    geneName <- unlist(strsplit(human_data$`subunits(Gene name)`[i], ";"))
+    for (gene in geneName){
+      iPrev <- grep(gene, HGNC$prev)[1]
+      if ((gene != "") & (length(iPrev) == 1) & (! is.na(iPrev))) {
+          newgene <- gsub(gene, HGNC$sym[iPrev], human_data$`subunits(Gene name)`[i])
+          human_data$`subunits(Gene name)`[i] <- newgene
+          count <- count + 1
+      }
+    }
+  }
+  ```
+  
+  &nbsp;
+  
+  
+  #### 4.5 Final validation
+  
+  Validation:
+  
+  ```R
+  
+    finalgenes <- c()
+    for (i in seq_len(nrow(human_data))){
+      geneName <- unlist(strsplit(human_data$`subunits(Gene name)`[i], ";"))
+      finalgenes <- c(geneName, finalgenes)
+    }
+    loc <- which(finalgenes == "")
+    finalgenes <- finalgenes[-loc]
+    sum(finalgene == "N/A")
+    sum(! is.na(finalgene)) * 100 / length(finalgene) 
+    sel <- ( ! (finalgenes %in% HGNC$sym))
+    # The performance is really bad, I will have to check it again
+    length(finalgenes[ sel ] )  # 230
+    length( unique(finalgenes[ sel ])) # 81
 
 
+```
+
+&nbsp;
+
+# 5 Annotating gene sets with CORUM and inAct Data
+
+## 8 References
+
+&nbsp;
+
+
+* Giurgiu, M., Reinhard, J., Brauner, B., Dunger-Kaltenbach, I., Fobo, G., Frishman, G., Montrone, C., & Ruepp, A. (2019). CORUM: the comprehensive resource of mammalian protein complexes-2019. Nucleic acids research, D1, D559-D563.
+
+&nbsp;
+
+## 9 Acknowledgements
+
+Thanks to Simon Kågedal's very useful [PubMed to APA reference tool](http://helgo.net/simon/pubmed/).
+
+Thank you professor Boris Steipe for providing the R package templates, project templates and usefl resources and tools for us. 
+
+User `Potherca` [posted on Stack](https://stackoverflow.com/questions/13808020/include-an-svg-hosted-on-github-in-markdown) how to use the parameter `?sanitize=true` to display `.svg` images in github markdown.
+
+&nbsp;
+
+&nbsp;
 
 <!-- [END] -->
