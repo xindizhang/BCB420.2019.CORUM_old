@@ -1,17 +1,16 @@
-Package: rpt
+Package: BCB420.2019.CORUM
 Type: Package
-Title: R Package Template
-Version: 1.2.3
-Date: 2019-01-22
+Title: Workflow to work with CORUM database
+Version: 1.0
+Date: 2019-02-05
 Authors@R: c(
-    person("Boris", "Steipe", email = "boris.steipe@utoronto.ca", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1134-6758"))
+    person("Xindi", "Zhang", email = "xindi.zhang@mail.utoronto.ca", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1134-6758"))
     )
-Description: A template for an RStudio project of a basic R package with a
-             GitHub repository. rpt follows principles described in
-             Hadley Wickham's R Packages book and is compatible with CRAN
-             guidelines. The project is version controlled, contains testing
-             code, can be installed from GitHub using standard tools, and 
-             includes extensive instructions on how to install and customize.
+Description: A pacakge to work with CORUM, a dataset for protein complex.
+             It shows the workflow to download network data form [the CORUM database]
+             (https://mips.helmholtz-muenchen.de/corum/), map annotated human protein 
+             complex data to [HGNC](https://www.genenames.org/) symbols, update the 
+             outdated symbols and provide examples for statistic cmputation of the databases.
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
