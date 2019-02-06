@@ -150,3 +150,40 @@ length( unique(finalgenes[ sel ])) # 81
 #    
 
 unique(human_data$`Protein complex purification method`)
+
+df <- data.frame(symbols=character(), complexes=list())
+de <- list(hello="hi", goodbye=list("bye", "fsd"))
+df = rbind(df,de, stringsAsFactors=FALSE)
+
+# Create a list containing a vector, a matrix and a list.
+list_data <- list(c("Jan","Feb","Mar"), matrix(c(3,9,5,1,-2,8), nrow = 2),
+                  list("green",12.3))
+
+# Give names to the elements in the list.
+names(list_data) <- c("1st Quarter", "A_Matrix", "A Inner list")
+
+# Show the list.
+print(list_data)
+names(list_data)[1] <- "Hi"
+ 
+
+
+elements <- 1
+symbolList <- list()
+for (i in seq_len(nrow(human_data))){
+  geneName <- unlist(strsplit(human_data$`subunits(Gene name)`[i], ";"))
+  for (gene in geneName){
+    if (gene != ""){
+      if (gene %in% names(symbolList)){
+        sel <- which(names(symbolList) == gene)
+        print(gene)
+        print(symbolList[sel])
+        symbolList[[sel]] <- c(symbolList[[sel]], human_data$ComplexName[i])
+      }else{
+        symbolList[elements] <- c(human_data$ComplexName[i])
+        names(symbolList)[elements] <- gene
+        elements <- elements + 1
+      }
+    }
+  }
+}

@@ -15,7 +15,7 @@
 ## 1 About this package:
 This pakage is designed using (hyginn/BCB420.2019.STRING) as an template. The 2019.STRING package is written by Dr. Boris Steipe.
 
-This pacakge is designed to download network data form [the CORUM database](https://mips.helmholtz-muenchen.de/corum/), map annotated human protein complex data to [HGNC](https://www.genenames.org/) symbols, and provide examples for statistic cmputation of the databases.
+This package is designed to download network data from the [CORUM database](https://mips.helmholtz-muenchen.de/corum/), map annotated human protein complex data to [HGNC](https://www.genenames.org/), and provide examples for statistic computation of the databases.
 
 The package serves dual duty, as an RStudio project, as well as an R package that can be installed. Package checks **pass without errors, warnings, or notes**.
 
@@ -33,17 +33,12 @@ The package serves dual duty, as an RStudio project, as well as an R package tha
       |__toBrowser.R               # display .md files in your browser
    |__inst/
       |__extdata/
-         |__ensp2sym.RData         # ENSP ID to HGNC symbol mapping tool
-         |__xSetEdges.tsv          # annotated example edges
-      |__img/
-         |__[...]                  # image sources for .md document
-      |__scripts/
-         |__recoverIDs.R           # utility to use biomaRt for ID mapping
+         |__symbolToCom.RData      # Tool for finding compleses encoded by a gene
    |__LICENSE
    |__NAMESPACE
    |__R/
-      |__zzz.R
-      |__script.R
+      |__zzz.R                     # Welcoming file 
+      |__script.R                  # A raw script for this work flow
    |__README.md                    # this file
 
 ```
@@ -224,6 +219,43 @@ The gene symbols encodes for one protein complex is quoted in one string and sep
 &nbsp;
 
 # 5 Annotating gene sets with CORUM and inAct Data
+Gereation of RData file which comtains a list with symbols and the protein complex the symbol encodes for. 
+```R
+elements <- 1
+symbolList <- list()
+for (i in seq_len(nrow(human_data))){
+  geneName <- unlist(strsplit(human_data$`subunits(Gene name)`[i], ";"))
+  for (gene in geneName){
+    if (gene != ""){
+      if (gene %in% names(symbolList)){
+        sel <- which(names(symbolList) == gene)
+        print(gene)
+        print(symbolList[sel])
+        symbolList[[sel]] <- c(symbolList[[sel]], human_data$ComplexName[i])
+      }else{
+        symbolList[elements] <- c(human_data$ComplexName[i])
+        names(symbolList)[elements] <- gene
+        elements <- elements + 1
+      }
+    }
+  }
+}
+
+# Save data
+save(, file = file.path("inst", "extdata", "symbolToCom.RData"))
+
+# Load data
+load(file = file.path("inst", "extdata", "symbolToCom.RData"))
+
+# To check what complex a gene encode for, use symbolList[gene symbol]
+symbolList["CDKN1A"]
+# [1] "CDKN1A"
+# $`CDKN1A`
+# [1] "Cell cycle kinase complex CDC2"
+# [2] "Cell cycle kinase complex CDK2"
+# [3] "Cell cycle kinase complex CDK4"
+
+```
 
 ## 6 References
 
@@ -238,7 +270,7 @@ The gene symbols encodes for one protein complex is quoted in one string and sep
 
 Thanks to Simon Kågedal's very useful [PubMed to APA reference tool](http://helgo.net/simon/pubmed/).
 
-Thank you professor Boris Steipe for providing the R package templates, project templates and usefl resources and tools for us. 
+Thank you professor Boris Steipe for providing the R package templates, project templates and useful resources and tools for us. 
 
 
 &nbsp;
