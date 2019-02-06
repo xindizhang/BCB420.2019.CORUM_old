@@ -78,7 +78,7 @@ CORUM integrates and cross-references data of mammalian protein complexes from e
 
 ## 3 Data download and cleanup
 
-To download the source data from STRING ... :
+To download the source data from CORUM:
 
 1. Navigate to the [**CORUM** database](https://mips.helmholtz-muenchen.de/corum/#) and follow the link to the [download section](https://mips.helmholtz-muenchen.de/corum/#download).
 2. Choose the type of complex data you wnat to download
@@ -177,6 +177,7 @@ The gene symbols encodes for one protein complex is quoted in one string and sep
   }
   
   # Replace the oudated genes with the new version
+  # These code uses Dr. Boris's BCB420.2019.STRING as a reference
   for (i in seq_len(nrow(human_data))){
     geneName <- unlist(strsplit(human_data$`subunits(Gene name)`[i], ";"))
     for (gene in geneName){
