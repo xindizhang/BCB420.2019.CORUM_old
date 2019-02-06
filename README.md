@@ -8,11 +8,12 @@
 
 ----
 
-**If any of this information is ambiguous, inaccurate, outdated, or incomplete, please check the [most recent version](https://github.com/hyginn/BCB420.2019.STRING) of the package on GitHub and if the problem has not already been addressed, please [file an issue](https://github.com/hyginn/BCB420.2019.STRING/issues).**
+**If any of this information is ambiguous, inaccurate, outdated, or incomplete, please check the [most recent version](https://github.com/xindizhang/BCB420.2019.CORUM.git) of the package on GitHub and if the problem has not already been addressed, please [file an issue](https://github.com/xindizhang/BCB420.2019.CORUM.git/issues).**
 
 ----
 
 ## 1 About this package:
+This pakage is designed using (hyginn/BCB420.2019.STRING) as an template. The 2019.STRING package is written by Dr. Boris Steipe.
 
 This pacakge is designed to download network data form [the CORUM database](https://mips.helmholtz-muenchen.de/corum/), map annotated human protein complex data to [HGNC](https://www.genenames.org/) symbols, and provide examples for statistic cmputation of the databases.
 
@@ -199,7 +200,7 @@ The gene symbols encodes for one protein complex is quoted in one string and sep
   
   #### 4.5 Final validation
   
-  Validation:
+  Validation: The validation shows no change which means that something is wrong. I need to check this and modify the code.
   
   ```R
   
@@ -224,7 +225,7 @@ The gene symbols encodes for one protein complex is quoted in one string and sep
 
 # 5 Annotating gene sets with CORUM and inAct Data
 
-## 8 References
+## 6 References
 
 &nbsp;
 
@@ -233,13 +234,12 @@ The gene symbols encodes for one protein complex is quoted in one string and sep
 
 &nbsp;
 
-## 9 Acknowledgements
+## 7 Acknowledgements
 
 Thanks to Simon Kågedal's very useful [PubMed to APA reference tool](http://helgo.net/simon/pubmed/).
 
 Thank you professor Boris Steipe for providing the R package templates, project templates and usefl resources and tools for us. 
 
-User `Potherca` [posted on Stack](https://stackoverflow.com/questions/13808020/include-an-svg-hosted-on-github-in-markdown) how to use the parameter `?sanitize=true` to display `.svg` images in github markdown.
 
 &nbsp;
 
