@@ -187,3 +187,9 @@ for (i in seq_len(nrow(human_data))){
     }
   }
 }
+save(symbolList, file = file.path("inst", "extdata", "symbolToCom.RData"))
+load(file = file.path("inst", "extdata", "symbolToCom.RData"))
+symbolList["CDKN1A"]
+
+
+

@@ -229,8 +229,6 @@ for (i in seq_len(nrow(human_data))){
     if (gene != ""){
       if (gene %in% names(symbolList)){
         sel <- which(names(symbolList) == gene)
-        print(gene)
-        print(symbolList[sel])
         symbolList[[sel]] <- c(symbolList[[sel]], human_data$ComplexName[i])
       }else{
         symbolList[elements] <- c(human_data$ComplexName[i])
@@ -242,7 +240,7 @@ for (i in seq_len(nrow(human_data))){
 }
 
 # Save data
-save(, file = file.path("inst", "extdata", "symbolToCom.RData"))
+save(symbolList, file = file.path("inst", "extdata", "symbolToCom.RData"))
 
 # Load data
 load(file = file.path("inst", "extdata", "symbolToCom.RData"))
