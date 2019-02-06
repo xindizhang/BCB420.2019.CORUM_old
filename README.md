@@ -62,9 +62,9 @@ Available annotations and information are:
 
 1. **Complex name and ID**
 2. **UniPort annotation**: UniPort Id, Identification of subunits
-3. **Gene Ontology (GO) information **: This is the functional annotation of the complex
+3. **Gene Ontology (GO) information**: This is the functional annotation of the complex
 4. **Protein complex purification method**: The experimental method used to purify the protein complexes
-5. **Organism **
+5. **Organism**
 6. **PMID**
 7. **Comment**: Information about disease and cellular function information
 
